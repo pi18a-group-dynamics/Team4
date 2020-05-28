@@ -122,7 +122,18 @@ namespace GroupTask
 
         public static string CheckNumeric(string input, char[] extendAccessedChars = null)
         {
+			var accessed = new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+            var rightInput = "";
+            if (extendAccessedChars != null)
+                accessed = accessed.Union(extendAccessedChars).ToArray();
+            if (input.Length != 0)
+            {
+                for (int i = 0; i < input.Length; i++)
+                    if (accessed.Contains(input[i]))
+                        rightInput += input[i];
 
+            }
+            return rightInput;
         }
 
         private void bChangeSizeOfMatrix_Click(object sender, RoutedEventArgs e)
@@ -167,9 +178,9 @@ namespace GroupTask
         }
 
         private void tbCountOfRows_TextChanged(object sender, TextChangedEventArgs e)
-		{}
+            => tbCountOfRows.Text = CheckNumeric(tbCountOfRows.Text);
 
         private void tbCountOfColumns_TextChanged(object sender, TextChangedEventArgs e)
-		{}
+            => tbCountOfColumns.Text = CheckNumeric(tbCountOfColumns.Text);
     }
 }
