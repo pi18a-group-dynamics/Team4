@@ -102,7 +102,31 @@ namespace GroupTask
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "txt files (*.txt)|*.txt";
+            ofd.ShowDialog();
+            if (ofd.FileNames.Length != 1)
+                return;
+            if (!string.IsNullOrWhiteSpace(ofd.FileName))
+            {
+                StreamWriter writer = new StreamWriter(ofd.FileName);
+                WriteMatrix(FirstMatrix, writer);
+                WriteMatrix(SecondMatrix, writer);
+                if(Result!=null)
+                    WriteMatrix(Result, writer);
+                writer.Close();
+            }
+            static void WriteMatrix(double[,] arr, StreamWriter writer)
+            {
+                for (int i = 0; i < arr.GetLength(0); i++)
+                {
+                    var s = new StringBuilder();
+                    for (int j = 0; j < arr.GetLength(1); j++)
+                        s.Append(arr[i, j] + " ");
+                    writer.Write(s.ToString() + "\n");
+                }
+                writer.Write("\n");
+            }
         }
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
