@@ -67,17 +67,37 @@ namespace GroupTask
 
         public static DataTable ToDataTable(double[,] matrix)
         {
+            var res = new DataTable();
+            res.Columns.Add("n", typeof(double));
+            for (int i = 0; i < matrix.GetLength(1); i++)
+                res.Columns.Add("" + (1 + i), typeof(double));
 
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                var row = res.NewRow();
+                row[0] = i+ 1;
+                for (int j = 1; j < matrix.GetLength(1) + 1; j++)
+                    row[j] = Math.Round(matrix[i, j - 1], 2);
+
+                res.Rows.Add(row);
+            }
+            res.Columns[0].ReadOnly = true;
+            res.RowChanged += Res_RowChanged;
+            return res;
         }
 
         private static void Res_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-
+            CurWindow.ToArray(CurWindow.dgFirstMatrix, CurWindow.FirstMatrix);
+            CurWindow.ToArray(CurWindow.dgSecondMatrix, CurWindow.SecondMatrix);
         }
 
         private void ToArray(DataGrid grid, double[,] matrix)
         {
-
+            var table = ((DataView)grid.ItemsSource).ToTable();
+            for (int i = 0; i < table.Rows.Count; i++)
+                for (int j = 1; j < table.Columns.Count; j++)
+                    matrix[i, j - 1] = (double)table.Rows[i].ItemArray[j];
         }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
