@@ -82,6 +82,133 @@ namespace GroupTask
             return null;
         }
 
+    public static void LU(double[,] a, out double[,] U, out double[,] L)
+        {
+            int n = a.GetLength(0);
+            U = new double[n, n];
+            L = new double[n, n];
+
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    U[i, j] = a[i, j];
+
+            for (int i = 0; i < n; i++)
+                for (int j = i; j < n; j++)
+                    L[j, i] = U[j, i] / U[i, i];
+
+            for (int k = 1; k < n; k++)
+            {
+                for (int i = k - 1; i < n; i++)
+                    for (int j = i; j < n; j++)
+                        L[j, i] = U[j, i] / U[i, i];
+
+                for (int i = k; i < n; i++)
+                    for (int j = k - 1; j < n; j++)
+                        U[i, j] = U[i, j] - L[i, k - 1] * U[k - 1, j];
+            }
+        }
+
+        public static double[,] UpperTriangular(double[,] a)
+        {
+            if (!IsSquare(a))
+            {
+                MessageBox.Show("Матрица должна быть квадратной.");
+                return null;
+            }
+            LU(a, out double[,] U, out _);
+            foreach (var item in U)
+                if (double.IsNaN(item))
+                {
+                    MessageBox.Show("Невозможно вычислить верхнюю треугольную матрицу для невырожденной");
+                    return null;
+                }
+            return U;
+        }
+
+        public static double[,] LowerTriangular(double[,] a)
+        {
+            if (!IsSquare(a))
+            {
+                MessageBox.Show("Матрица должна быть квадратной.");
+                return null;
+            }
+            LU(a, out _, out double[,] L);
+            foreach (var item in L)
+                if(double.IsNaN(item))
+                {
+                    MessageBox.Show("Невозможно вычислить нижнюю треугольную матрицу для невырожденной");
+                    return null;
+                }
+            return L;
+        }
+
+       public static double[,] Transpose(double[,] a)
+        {
+            int rows = a.GetLength(0);
+            int columns = a.GetLength(1);
+            double[,] arr = new double[columns,rows];
+            for (int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)
+                    arr[i,j] = a[j,i];
+                
+            return arr;
+        }
+        public static double[,] NormalizeFrobenius(double[,] a)
+        {
+            double norm = 0;
+            int columns = a.GetLength(0);
+            int rows = a.GetLength(1);
+            for (int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)
+                    norm += a[i,j] * a[i,j];
+
+            norm = Math.Sqrt(norm);
+            double[,] arr = new double[columns, rows];
+            for (int i = 0; i < columns; i++)
+                for (int j = 0; j < rows; j++)               
+                    arr[i,j] = a[i,j] / norm;
+
+            return arr;
+        }
+
+        public static bool IsIdentity(double[,] a)
+        {
+            int c = 0;
+            int rows = a.GetLength(0);
+            int columns = a.GetLength(1);
+            for (int i = 0; i < rows; i++, c++)
+            {
+                int j = 0;
+                for (; j < c; j++)
+                    if (a[i,j] != 0) 
+                        return false;
+                if (a[i,j++] != 1) 
+                    return false;
+                for (; j < columns; j++)
+                    if (a[i,j] != 0) 
+                        return false;
+            }
+            return true;
+        }
+
+        public static double[,] AreInverses(double[,] a, double[,] b)
+        {
+            if (!IsSquare(a) || !IsSquare(b))
+            {
+                MessageBox.Show("Неквадратная матрица не имеет обратной.");
+                return null;
+            }
+            else
+            {
+                if (IsIdentity(Multiplication(a, b)))
+                {
+                    MessageBox.Show("Матрицы являются взаимно обратными");
+                    return null;
+                }
+                MessageBox.Show("Матрицы не являются взаимно обратными");
+                return null;
+            }
+        }
        
     }
 }
