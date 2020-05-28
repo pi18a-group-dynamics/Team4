@@ -131,7 +131,79 @@ namespace GroupTask
 
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
         {
-
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "txt files (*.txt)|*.txt";
+            ofd.ShowDialog();
+            if (ofd.FileNames.Length != 1)
+                return;
+            if (!string.IsNullOrWhiteSpace(ofd.FileName))
+            {
+                var counter = 0;
+                var mas = new List<string>();
+                var rows = File.ReadAllText(ofd.FileName).Split('\n');
+                double[,] arr = null;
+                for (int l = 0; l < rows.Length; l++)
+                {
+                    if (string.IsNullOrWhiteSpace(rows[l]))
+                    {
+                        for (int i = 0; i < mas.Count(); i++)
+                        {
+                            string[] s = (from k in mas[i].Split() where !k.Equals("") && !k.Equals(" ") select k).ToArray();
+                            if(arr == null)
+                                arr = new double[mas.Count(), s.Length];
+                            if (s.Length != arr.GetLength(1))
+                                return;
+                            for (int j = 0; j < s.Length; j++)
+                                if (!double.TryParse(s[j], out arr[i, j]))
+                                    return;
+                        }
+                        mas = new List<string>();
+                        if (counter == 0)
+                        {
+                            if (arr == null)
+                                break;
+                            FirstMatrix = new double[arr.GetLength(0), arr.GetLength(1)];
+                            for (int i = 0; i < arr.GetLength(0); i++)
+                                for (int j = 0; j < arr.GetLength(1); j++)
+                                    FirstMatrix[i, j] = arr[i, j];
+                        }
+                        else if (counter == 1)
+                        {
+                            if (arr == null)
+                                break;
+                            SecondMatrix = new double[arr.GetLength(0), arr.GetLength(1)];
+                            for (int i = 0; i < arr.GetLength(0); i++)
+                                for (int j = 0; j < arr.GetLength(1); j++)
+                                    SecondMatrix[i, j] = arr[i, j];
+                        }
+                        else if (counter == 2)
+                        {
+                            if (arr == null)
+                            {
+                                Result = null;
+                                break;
+                            }
+                            Result = new double[arr.GetLength(0), arr.GetLength(1)];
+                            for (int i = 0; i < arr.GetLength(0); i++)
+                                for (int j = 0; j < arr.GetLength(1); j++)
+                                    Result[i, j] = arr[i, j];
+                        }
+                        else
+                            break;
+                        counter++;
+                        arr = null;
+                    }
+                    else
+                        mas.Add(rows[l]);
+                    
+                }
+                ButtonSecondMatrix_Click(null, null);
+                ButtonFirstMatrix_Click(null, null);
+                if (Result != null)
+                    dgResultMatrix.ItemsSource = ToDataTable(Result).DefaultView;
+                else
+                    dgResultMatrix.ItemsSource = null;
+            }
         }
 
         private void cbMethods_SelectionChanged(object sender, SelectionChangedEventArgs e)
