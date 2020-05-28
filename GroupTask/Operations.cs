@@ -48,41 +48,7 @@ namespace GroupTask
             return false;
         }
 
-        
-
-        public static double[,] Addition(double[,] a, double[,] b)
-        {
-            if (a.GetLength(0) == b.GetLength(0) && a.GetLength(1) == b.GetLength(1))
-            {
-                int rows = a.GetLength(0);
-                int columns = a.GetLength(1);
-                double[,] arr = new double[rows, columns];
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < columns; j++)
-                        arr[i, j] = a[i, j] + b[i, j];
-                return arr;
-            }
-            MessageBox.Show("Матрицы должны быть одного размера.");
-            return null;
-        }
-
-        public static double[,] Subtraction(double[,] a, double[,] b)
-        {
-            if (a.GetLength(0) == b.GetLength(0) && a.GetLength(1) == b.GetLength(1))
-            {
-                int rows = a.GetLength(0);
-                int columns = a.GetLength(1);
-                double[,] arr = new double[rows, columns];
-                for (int i = 0; i < rows; i++)
-                    for (int j = 0; j < columns; j++)
-                        arr[i, j] = a[i, j] - b[i, j];
-                return arr;
-            }
-            MessageBox.Show("Матрицы должны быть одного размера.");
-            return null;
-        }
-
-    public static void LU(double[,] a, out double[,] U, out double[,] L)
+        public static void LU(double[,] a, out double[,] U, out double[,] L)
         {
             int n = a.GetLength(0);
             U = new double[n, n];
@@ -142,7 +108,39 @@ namespace GroupTask
             return L;
         }
 
-       public static double[,] Transpose(double[,] a)
+        public static double[,] Addition(double[,] a, double[,] b)
+        {
+            if (a.GetLength(0) == b.GetLength(0) && a.GetLength(1) == b.GetLength(1))
+            {
+                int rows = a.GetLength(0);
+                int columns = a.GetLength(1);
+                double[,] arr = new double[rows, columns];
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < columns; j++)
+                        arr[i, j] = a[i, j] + b[i, j];
+                return arr;
+            }
+            MessageBox.Show("Матрицы должны быть одного размера.");
+            return null;
+        }
+
+        public static double[,] Subtraction(double[,] a, double[,] b)
+        {
+            if (a.GetLength(0) == b.GetLength(0) && a.GetLength(1) == b.GetLength(1))
+            {
+                int rows = a.GetLength(0);
+                int columns = a.GetLength(1);
+                double[,] arr = new double[rows, columns];
+                for (int i = 0; i < rows; i++)
+                    for (int j = 0; j < columns; j++)
+                        arr[i, j] = a[i, j] - b[i, j];
+                return arr;
+            }
+            MessageBox.Show("Матрицы должны быть одного размера.");
+            return null;
+        }
+
+        public static double[,] Transpose(double[,] a)
         {
             int rows = a.GetLength(0);
             int columns = a.GetLength(1);
@@ -209,6 +207,5 @@ namespace GroupTask
                 return null;
             }
         }
-       
     }
 }
