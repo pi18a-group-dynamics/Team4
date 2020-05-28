@@ -127,7 +127,30 @@ namespace GroupTask
 
         private void bChangeSizeOfMatrix_Click(object sender, RoutedEventArgs e)
         {
+            double[,] matrix = SecondMatrix;
+            if (VisibleFirstMatrix)
+                matrix = FirstMatrix;
+            if (string.IsNullOrWhiteSpace(tbCountOfColumns.Text) ||
+                string.IsNullOrWhiteSpace(tbCountOfRows.Text) ||
+                !int.TryParse(tbCountOfColumns.Text, out _) ||
+                !int.TryParse(tbCountOfRows.Text, out _))
+                return;
 
+            double[,] arr = new double[int.Parse(tbCountOfRows.Text), int.Parse(tbCountOfColumns.Text)];
+            for (int i = 0; i < Math.Min(arr.GetLength(0), matrix.GetLength(0)); i++)
+                for (int j = 0; j < Math.Min(arr.GetLength(1), matrix.GetLength(1)); j++)
+                    arr[i, j] = matrix[i, j];
+
+            if (VisibleFirstMatrix)
+            {
+                FirstMatrix = arr;
+                ButtonFirstMatrix_Click(null, null);
+            }
+            else
+            {
+                SecondMatrix = arr;
+                ButtonSecondMatrix_Click(null, null);
+            }
         }
 
         private void ButtonUseOperation_Click(object sender, RoutedEventArgs e)
