@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "7HSlU4GUNGogMSGJXD7R7kNMj4EoPtUs4coWIvDcgM6pepdq+MMF9iUA2zD70wTEIHeP5gDcGlobtmgqbRAKZQ==",
+  "success": true,
+  "projectFilePath": "E:\\Programs\\GroupTask\\GroupTask\\GroupTask.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jilts_1jukwuh\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+  ],
+  "logs": []
+}
