@@ -43,7 +43,26 @@ namespace GroupTask
 
         public MainWindow()
         {
+            InitializeComponent();
+            CurWindow = this;
+            MethodsForMatrix = new Dictionary<string, Func<double[,], double[,], double[,]>>()
+            {
+                ["Сложение"] = (a, b) => Operations.Addition(a, b),
+                ["Вычитание"] = (a, b) => Operations.Subtraction(a, b),
+                ["Умножение"] = (a, b) => Operations.Multiplication(a, b),
+                ["Умножение на вектор"] = (a, b) => Operations.Multiplication(a, b),
+                ["Умножение на число"] = (a, b) => Operations.MultiplicationNumber(a, b),
+                ["Транспонирование"] = (a, b) => Operations.Transpose(VisibleFirstMatrix ? a : b),
+                ["Нормирование"] = (a, b) => Operations.NormalizeFrobenius(VisibleFirstMatrix ? a : b),
+                ["Верхняя треугольная"] = (a, b) => Operations.UpperTriangular(VisibleFirstMatrix ? a : b),
+                ["Нижняя треугольная"] = (a, b) => Operations.LowerTriangular(VisibleFirstMatrix ? a : b),
+                ["Матрицы являются обратными?"] = (a, b) => Operations.AreInverses(a, b),
+            };
 
+            cbMethods.ItemsSource = MethodsForMatrix.Keys;
+
+            ButtonSecondMatrix_Click(null, null);
+            ButtonFirstMatrix_Click(null, null);
         }
 
         public static DataTable ToDataTable(double[,] matrix)
@@ -78,12 +97,22 @@ namespace GroupTask
 
         private void ButtonFirstMatrix_Click(object sender, RoutedEventArgs e)
         {
-
+            dgFirstMatrix.Visibility = Visibility.Visible;
+            dgSecondMatrix.Visibility = Visibility.Hidden;
+            dgFirstMatrix.ItemsSource = ToDataTable(FirstMatrix).DefaultView;
+            bFirstMatrix.Background = Brushes.Gray;
+            bSecondMatrix.Background = Brushes.LightGray;
+            VisibleFirstMatrix = true;
         }
 
         private void ButtonSecondMatrix_Click(object sender, RoutedEventArgs e)
         {
-
+            dgSecondMatrix.Visibility = Visibility.Visible;
+            dgFirstMatrix.Visibility = Visibility.Hidden;
+            dgSecondMatrix.ItemsSource = ToDataTable(SecondMatrix).DefaultView;
+            bSecondMatrix.Background = Brushes.Gray;
+            bFirstMatrix.Background = Brushes.LightGray;
+            VisibleFirstMatrix = false;
         }
 
         private void ButtonInfo_Click(object sender, RoutedEventArgs e)
@@ -103,7 +132,15 @@ namespace GroupTask
 
         private void ButtonUseOperation_Click(object sender, RoutedEventArgs e)
         {
-
+            if ((string)cbMethods.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать операцию");
+                return;
+            }
+            Result = MethodsForMatrix[(string)cbMethods.SelectedItem](FirstMatrix, SecondMatrix);
+            if (Result == null)
+                return;
+            dgResultMatrix.ItemsSource = ToDataTable(Result).DefaultView;
         }
 
         private void tbCountOfRows_TextChanged(object sender, TextChangedEventArgs e)
