@@ -110,6 +110,63 @@ namespace GroupTaskTests
 
             CollectionAssert.AreEqual(res, expected);
         }
+[TestMethod]
+        public void TestAddition()
+        {
+            var a = new double[,] {
+                { 5, 6},
+                { 4, 3},
+                { 0, 1}
+            };
 
+            var b = new double[,] {
+                { 5.5, 1},
+                { 44, 30},
+                { 0, 5}
+            };
+
+            double[,] expected = new double[,]
+            {
+                {10.5, 7},
+                {48, 33},
+                {0, 6}
+            };
+
+            var res = Operations.Addition(a, b);
+            for (int i = 0; i < res.GetLength(0); i++)
+                for (int j = 0; j < res.GetLength(1); j++)
+                    res[i, j] = Math.Round(res[i, j], 2);
+
+            CollectionAssert.AreEqual(res, expected);
+        }
+        [TestMethod]
+        public void TestAddition2()
+        {
+            var a = new double[,] {
+                { 5, 6},
+                { 4, 3},
+                { 0, 1}
+            };
+
+            var b = new double[,] {
+                { 5.5, 1},
+                { 44, 30},
+                { 0, 5}
+            };
+
+            double[,] expected = new double[,]
+            {
+                {10.5, 5},
+                {48, 33},
+                {0, 6}
+            };
+
+            var res = Operations.Addition(a, b);
+            for (int i = 0; i < res.GetLength(0); i++)
+                for (int j = 0; j < res.GetLength(1); j++)
+                    res[i, j] = Math.Round(res[i, j], 2);
+
+            CollectionAssert.AreNotEqual(res, expected);
+        }
     }
 }
