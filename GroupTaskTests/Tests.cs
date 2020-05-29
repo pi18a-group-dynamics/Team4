@@ -250,5 +250,29 @@ namespace GroupTaskTests
 
             CollectionAssert.AreEqual(res, expected);
         }
+		
+		[TestMethod]
+        public void TestUpperTriangular()
+        {
+            var a = new double[,] {
+                { 5.5, 1, 8},
+                { 44, 30, 9},
+                { 0, 5, 15.6}
+            };
+
+            double[,] expected = new double[,]
+            {
+                                {5.5, 1, 8},
+                {0, 22, -55},
+                {0, 0, 28.1}
+            };
+
+            var res = Operations.UpperTriangular(a);
+            for (int i = 0; i < res.GetLength(0); i++)
+                for (int j = 0; j < res.GetLength(1); j++)
+                    res[i, j] = Math.Round(res[i, j], 2);
+
+            CollectionAssert.AreEqual(res, expected);
+        }
     }
 }
