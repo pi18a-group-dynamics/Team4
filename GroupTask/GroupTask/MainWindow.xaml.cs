@@ -233,7 +233,14 @@ namespace GroupTask
 
         private void ButtonInfo_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                Process.Start("C:\\Program Files\\Microsoft Office\\Office16\\WINWORD.EXE", "Справка.docx");
+            }
+            catch(Exception ex)
+            {
+                Process.Start("notepad.exe", "Справка.txt");
+            }
         }
 
         public static string CheckNumeric(string input, char[] extendAccessedChars = null)

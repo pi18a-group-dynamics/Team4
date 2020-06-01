@@ -68,8 +68,7 @@
             Content="?"
             FontSize="20"
             Padding="0 -2 0 0"
-            Click="ButtonInfo_Click"
-            Visibility="Hidden"/>
+            Click="ButtonInfo_Click"/>
         <Label 
             Content="Ввод"
             FontSize="18" 
