@@ -25,26 +25,28 @@ namespace GroupTask
     public partial class MainWindow : Window
     {
         public Dictionary<string, Func<double[,], double[,], double[,]>> MethodsForMatrix { get; set; }
-
+        //первая матрица
         public double[,] FirstMatrix { get; set; } = new double[,] 
         {
             { 0 }
         };
+        //вторая матрица
         public double[,] SecondMatrix { get; set; } = new double[,]
         {
             { 0 }
         };
-
+        //результирующая матрица
         public double[,] Result { get; set; }
-
+        //текущее окно
         public static MainWindow CurWindow { get; set; }
-
+        //видимаая матрица
         public bool VisibleFirstMatrix { get; set; } = true;
 
         public MainWindow()
         {
             InitializeComponent();
             CurWindow = this;
+            //Список операций
             MethodsForMatrix = new Dictionary<string, Func<double[,], double[,], double[,]>>()
             {
                 ["Сложение"] = (a, b) => Operations.Addition(a, b),
@@ -65,6 +67,7 @@ namespace GroupTask
             ButtonFirstMatrix_Click(null, null);
         }
 
+        //Конвертировать матрицу в объект типа DataTable
         public static DataTable ToDataTable(double[,] matrix)
         {
             var res = new DataTable();
@@ -86,12 +89,14 @@ namespace GroupTask
             return res;
         }
 
+        //Обработчик изменения строк
         private static void Res_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             CurWindow.ToArray(CurWindow.dgFirstMatrix, CurWindow.FirstMatrix);
             CurWindow.ToArray(CurWindow.dgSecondMatrix, CurWindow.SecondMatrix);
         }
 
+        //Конвертировать datatable в матрицу
         private void ToArray(DataGrid grid, double[,] matrix)
         {
             var table = ((DataView)grid.ItemsSource).ToTable();
@@ -100,6 +105,7 @@ namespace GroupTask
                     matrix[i, j - 1] = (double)table.Rows[i].ItemArray[j];
         }
 
+        //Обработчик кнопки "Сохранить"
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -116,6 +122,7 @@ namespace GroupTask
                     WriteMatrix(Result, writer);
                 writer.Close();
             }
+
             static void WriteMatrix(double[,] arr, StreamWriter writer)
             {
                 for (int i = 0; i < arr.GetLength(0); i++)
@@ -129,6 +136,7 @@ namespace GroupTask
             }
         }
 
+        //Обработчик кнопки "Загрузить"
         private void ButtonLoad_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -206,11 +214,7 @@ namespace GroupTask
             }
         }
 
-        private void cbMethods_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
+        //Обработчик кнопки "1 матрица"
         private void ButtonFirstMatrix_Click(object sender, RoutedEventArgs e)
         {
             dgFirstMatrix.Visibility = Visibility.Visible;
@@ -221,6 +225,7 @@ namespace GroupTask
             VisibleFirstMatrix = true;
         }
 
+        //Обработчик кнопки "2 матрица"
         private void ButtonSecondMatrix_Click(object sender, RoutedEventArgs e)
         {
             dgSecondMatrix.Visibility = Visibility.Visible;
@@ -231,6 +236,7 @@ namespace GroupTask
             VisibleFirstMatrix = false;
         }
 
+        //Обработчик кнопки "," (Справка)
         private void ButtonInfo_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -239,10 +245,18 @@ namespace GroupTask
             }
             catch(Exception ex)
             {
-                Process.Start("notepad.exe", "Справка.txt");
+                try
+                {
+                    Process.Start("notepad.exe", "Справка.txt");
+                }
+                catch(Exception)
+                {
+                    MessageBox.Show("Справка в данный момент недоступна");
+                }
             }
         }
 
+        //Вычленяет символы из строки за исключением цифр, если число 100+, кидает эксемшин
         public static string CheckNumeric(string input, char[] extendAccessedChars = null)
         {
             var accessed = new[] { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
@@ -256,12 +270,18 @@ namespace GroupTask
                         rightInput += input[i];
 
             }
+            if(!string.IsNullOrWhiteSpace(rightInput) && int.Parse(rightInput)>100)
+            {
+                MessageBox.Show("Размер матрицы не должен превышать 100х100");
+                rightInput = "";
+            }
             return rightInput;
         }
 
+        //Изменить размер матрицы
         private void bChangeSizeOfMatrix_Click(object sender, RoutedEventArgs e)
         {
-            double[,] matrix = SecondMatrix;
+            var matrix = SecondMatrix;
             if (VisibleFirstMatrix)
                 matrix = FirstMatrix;
             if (string.IsNullOrWhiteSpace(tbCountOfColumns.Text) ||
@@ -287,6 +307,7 @@ namespace GroupTask
             }
         }
 
+        //Обработчик кнопки "Вычислить"
         private void ButtonUseOperation_Click(object sender, RoutedEventArgs e)
         {
             if ((string)cbMethods.SelectedItem == null)
@@ -300,9 +321,11 @@ namespace GroupTask
             dgResultMatrix.ItemsSource = ToDataTable(Result).DefaultView;
         }
 
+        //Обработчик поля для ввода строк
         private void tbCountOfRows_TextChanged(object sender, TextChangedEventArgs e)
             => tbCountOfRows.Text = CheckNumeric(tbCountOfRows.Text);
 
+        //Обработчик поля для ввода столбцов
         private void tbCountOfColumns_TextChanged(object sender, TextChangedEventArgs e)
             => tbCountOfColumns.Text = CheckNumeric(tbCountOfColumns.Text);
     }

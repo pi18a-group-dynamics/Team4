@@ -52,8 +52,7 @@
             x:Name="cbMethods"
             Height="25" 
             Margin="70,29,210,406"
-            FontSize="14"
-            SelectionChanged="cbMethods_SelectionChanged"/>
+            FontSize="14"/>
         <Button
             Height="25"
             FontSize="14" 
